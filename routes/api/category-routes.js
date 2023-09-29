@@ -1,14 +1,12 @@
 const router = require('express').Router();
 const { Category, Product } = require('../../models');
 
-  // be sure to include its associated Products
-
-  //ABLE TO GET CATEGORIES WITH INSOMNIA
 router.get('/', (req, res) => {
+    // find all categories
   Category.findAll ({
     include: {
       model: Product,
-      attributes: ['product_name']
+      attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
     }
   })
   .then (catData => res.json (catData))
@@ -18,15 +16,15 @@ router.get('/', (req, res) => {
   })
 });
 
-// ABLE TO GET ID WITH INSOMNIA
   router.get('/:id', (req, res) => {
+      // find by category ID
     Category.findOne ({
       where: {
         id: req.params.id
       },
       include: {
         model: Product,
-        attributes: ['product_name']
+        attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
       }
     })
     .then (catData => res.json (catData))
@@ -34,12 +32,10 @@ router.get('/', (req, res) => {
       console.log (err);
       res.status(500).json(err);
     })
-    // find one category by its `id` value
-    // be sure to include its associated Products
   });
   
-
 router.post('/', (req, res) => {
+    // create category
   Category.create({
     category_name: req.body.category_name
   })
@@ -48,10 +44,10 @@ router.post('/', (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
-  // create a new category
 });
 
 router.put('/:id', (req, res) => {
+  // update category ID
   Category.update(req.body, {
     where: {
       id: req.params.id
@@ -71,7 +67,7 @@ router.put('/:id', (req, res) => {
   });
 
 router.delete('/:id', (req, res) => {
-  // delete a category by its `id` value
+  // delete category by ID
   Category.destroy({
     where: {
       id: req.params.id
